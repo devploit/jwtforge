@@ -31,6 +31,7 @@ import { Logo } from "@/components/Logo";
 import { JsonLd } from "@/components/JsonLd";
 import { AnalyticsClient } from "@/components/AnalyticsClient";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { appJsonLd, websiteJsonLd } from "@/lib/seo";
 import Link from "next/link";
 
@@ -158,6 +159,7 @@ export default function RootLayout({
             </p>
           </footer>
           <AnalyticsClient />
+          <SpeedInsights />
           <ServiceWorkerRegister />
         </TokenProvider>
       </body>
