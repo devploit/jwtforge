@@ -65,7 +65,12 @@ export function JwkInjectionPanel({
             Host this JWKS at your <code>jku</code> URL (the embedded-jwk token
             needs no hosting — it carries the key itself):
           </p>
-          <CodeBlock code={publicJwk} title="jwks.json (public)" language="json" />
+          <CodeBlock
+            code={publicJwk}
+            title="jwks.json (public)"
+            language="json"
+            filename="jwks.json"
+          />
         </div>
       )}
       {privateKey && (
@@ -78,6 +83,7 @@ export function JwkInjectionPanel({
             code={privateKey}
             title="attacker private key (PKCS#8 PEM)"
             language="pem"
+            filename="attacker-private-key.pem"
           />
         </div>
       )}

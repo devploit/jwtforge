@@ -11,12 +11,17 @@ import type { GeneratedToken } from "@/lib/attacks";
 
 type ArtifactKind = "curl" | "http" | "burp" | "nuclei" | "jwtTool";
 
-const ARTIFACT_TABS: { key: ArtifactKind; label: string; lang: string }[] = [
-  { key: "curl", label: "curl", lang: "bash" },
-  { key: "http", label: ".http", lang: "http" },
-  { key: "burp", label: "Burp Intruder", lang: "text" },
-  { key: "nuclei", label: "nuclei", lang: "yaml" },
-  { key: "jwtTool", label: "jwt_tool", lang: "bash" },
+const ARTIFACT_TABS: {
+  key: ArtifactKind;
+  label: string;
+  lang: string;
+  filename?: string;
+}[] = [
+  { key: "curl", label: "curl", lang: "bash", filename: "jwt-attack.sh" },
+  { key: "http", label: ".http", lang: "http", filename: "jwt-attack.http" },
+  { key: "burp", label: "Burp Intruder", lang: "text", filename: "jwt-tokens.txt" },
+  { key: "nuclei", label: "nuclei", lang: "yaml", filename: "jwt-forged-token.yaml" },
+  { key: "jwtTool", label: "jwt_tool", lang: "bash", filename: "jwt-tool.sh" },
 ];
 
 export function GeneratedTokens({
@@ -82,6 +87,7 @@ export function GeneratedTokens({
             code={current}
             title={ARTIFACT_TABS.find((a) => a.key === tab)?.label}
             language={ARTIFACT_TABS.find((a) => a.key === tab)?.lang}
+            filename={ARTIFACT_TABS.find((a) => a.key === tab)?.filename}
           />
         </div>
       </div>

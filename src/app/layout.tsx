@@ -79,7 +79,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${display.variable} ${sans.variable} ${mono.variable}`}
+      className={`scroll-smooth ${display.variable} ${sans.variable} ${mono.variable}`}
     >
       <body className="min-h-screen font-sans antialiased">
         <TokenProvider>

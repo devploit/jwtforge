@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useToken } from "@/lib/token-context";
 import { SAMPLES } from "@/lib/samples";
 
@@ -11,6 +12,18 @@ export function TokenInput({
   showSamples?: boolean;
 }) {
   const { token, setToken } = useToken();
+  const [linkCopied, setLinkCopied] = useState(false);
+
+  async function copyShareLink() {
+    try {
+      const url = `${window.location.origin}/decode#t=${encodeURIComponent(token)}`;
+      await navigator.clipboard.writeText(url);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 1500);
+    } catch {
+      // clipboard blocked; ignore
+    }
+  }
 
   return (
     <div className="panel p-4">
@@ -18,11 +31,21 @@ export function TokenInput({
         <label htmlFor="token-input" className="label mb-0">
           JWT
         </label>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {token && (
             <button
               type="button"
-              className="text-xs text-slate-400 hover:text-slate-100"
+              className="text-xs text-slate-400 transition-colors hover:text-accent"
+              onClick={copyShareLink}
+              title="Copy a shareable link with this token in the URL fragment (never sent to a server)"
+            >
+              {linkCopied ? "Link copied ✓" : "Copy link"}
+            </button>
+          )}
+          {token && (
+            <button
+              type="button"
+              className="text-xs text-slate-400 transition-colors hover:text-slate-100"
               onClick={() => setToken("")}
             >
               Clear
