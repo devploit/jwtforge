@@ -30,6 +30,7 @@ import { PrivacyBadge } from "@/components/PrivacyBadge";
 import { Logo } from "@/components/Logo";
 import { JsonLd } from "@/components/JsonLd";
 import { AnalyticsClient } from "@/components/AnalyticsClient";
+import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { appJsonLd, websiteJsonLd } from "@/lib/seo";
 import Link from "next/link";
 
@@ -145,6 +146,7 @@ export default function RootLayout({
             </p>
           </footer>
           <AnalyticsClient />
+          <ServiceWorkerRegister />
         </TokenProvider>
       </body>
     </html>
