@@ -1,5 +1,32 @@
 export const SITE_URL = "https://jwtforge.com";
 
+export interface GuideMeta {
+  slug: string;
+  title: string;
+  description: string;
+  blurb: string;
+}
+
+/** Long-tail guide articles. Source of truth for the index + sitemap. */
+export const GUIDES: GuideMeta[] = [
+  {
+    slug: "jwt-algorithm-confusion",
+    title: "JWT Algorithm Confusion (RS256 → HS256)",
+    description:
+      "How the JWT algorithm-confusion attack works, how to test for it, and how to fix it: forcing a server to verify an RS256 token as HS256 using its public key as the HMAC secret.",
+    blurb:
+      "Force a server to verify an RS256 token as HS256 using its public key as the HMAC secret — and how to fix it.",
+  },
+  {
+    slug: "jwt-none-algorithm-attack",
+    title: "The JWT alg:none Attack",
+    description:
+      "How the JWT 'alg:none' attack bypasses signature verification, the case-variant filter bypasses, how to test for it, and how to remediate it.",
+    blurb:
+      "Strip the signature and set alg to none to bypass verification — variants, testing, and remediation.",
+  },
+];
+
 export interface Faq {
   q: string;
   a: string;

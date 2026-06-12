@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { GUIDES } from "@/lib/seo";
 
 const SITE_URL = "https://jwtforge.com";
 
@@ -12,7 +13,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/decode", priority: 0.9, freq: "monthly" },
     { path: "/attack", priority: 0.9, freq: "monthly" },
     { path: "/audit", priority: 0.8, freq: "monthly" },
+    { path: "/guides", priority: 0.7, freq: "monthly" },
     { path: "/about", priority: 0.6, freq: "yearly" },
+    ...GUIDES.map((g) => ({
+      path: `/guides/${g.slug}`,
+      priority: 0.7,
+      freq: "monthly" as const,
+    })),
   ];
   return routes.map((r) => ({
     url: `${SITE_URL}${r.path}`,

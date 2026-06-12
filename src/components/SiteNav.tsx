@@ -7,6 +7,7 @@ const TABS = [
   { href: "/decode", label: "Decode" },
   { href: "/audit", label: "Audit" },
   { href: "/attack", label: "Attack" },
+  { href: "/guides", label: "Guides" },
   { href: "/about", label: "About" },
 ];
 
@@ -15,8 +16,11 @@ export function SiteNav() {
   return (
     <nav aria-label="Primary" className="flex items-center gap-1">
       {TABS.map((tab) => {
-        // The logo is "home"; on the landing page no tab is active.
-        const active = pathname === tab.href;
+        // The logo is "home"; on the landing page no tab is active. Section
+        // pages (e.g. /guides/<slug>) keep their parent tab active.
+        const active =
+          pathname === tab.href ||
+          (tab.href !== "/" && pathname.startsWith(`${tab.href}/`));
         return (
           <Link
             key={tab.href}
