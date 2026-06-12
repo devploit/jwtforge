@@ -1,8 +1,33 @@
 import type { Metadata } from "next";
+import { Chakra_Petch, IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { TokenProvider } from "@/lib/token-context";
+
+// Distinctive, on-brand type system (not Inter/system):
+// — Chakra Petch: angular, technical display for headings & wordmark.
+// — IBM Plex Sans: refined humanist body with engineering pedigree.
+// — JetBrains Mono: code / tokens / numerics.
+const display = Chakra_Petch({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-display",
+  display: "swap",
+});
+const sans = IBM_Plex_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-sans",
+  display: "swap",
+});
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-mono",
+  display: "swap",
+});
 import { SiteNav } from "@/components/SiteNav";
 import { PrivacyBadge } from "@/components/PrivacyBadge";
+import { Logo } from "@/components/Logo";
 import Link from "next/link";
 
 const SITE_URL = "https://jwtforge.com";
@@ -34,12 +59,14 @@ export const metadata: Metadata = {
     url: SITE_URL,
     siteName: "JWTForge",
     type: "website",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "JWTForge" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "JWTForge — JWT Security Scanner & Attack Toolkit",
     description:
       "Attacker-minded, fully client-side JWT toolkit. Nothing ever leaves your browser.",
+    images: ["/og.png"],
   },
   robots: { index: true, follow: true },
 };
@@ -50,8 +77,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen antialiased">
+    <html
+      lang="en"
+      className={`${display.variable} ${sans.variable} ${mono.variable}`}
+    >
+      <body className="min-h-screen font-sans antialiased">
         <TokenProvider>
           <a
             href="#main"
@@ -62,9 +92,10 @@ export default function RootLayout({
           <header className="border-b border-line bg-bg-raised/60 backdrop-blur">
             <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
-                <Link href="/" className="flex items-center gap-2">
-                  <span className="font-mono text-lg font-bold text-accent">
-                    JWT<span className="text-slate-100">Forge</span>
+                <Link href="/" className="flex items-center gap-2.5">
+                  <Logo size={30} />
+                  <span className="font-display text-lg font-bold tracking-tight text-slate-100">
+                    JWT<span className="text-accent">Forge</span>
                   </span>
                 </Link>
                 <PrivacyBadge />

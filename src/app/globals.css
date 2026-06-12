@@ -8,32 +8,85 @@
 
 html,
 body {
-  background-color: #0a0e14;
-  color: #e2e8f0;
+  background-color: #070912;
+  color: #dbe2f0;
+}
+
+body {
+  /* Atmospheric depth: two faint brand-colored light sources, fixed so the
+     content scrolls over a stable backdrop. */
+  background-image:
+    radial-gradient(
+      60rem 60rem at 12% -10%,
+      rgba(139, 92, 246, 0.14),
+      transparent 60%
+    ),
+    radial-gradient(
+      55rem 55rem at 100% 0%,
+      rgba(59, 130, 246, 0.12),
+      transparent 55%
+    );
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Subtle film grain overlay for texture (kept extremely light). */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Keep app content above the grain layer. */
+body > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Visible focus ring for keyboard users across all interactive elements. */
 *:focus-visible {
-  outline: 2px solid #5eead4;
+  outline: 2px solid theme("colors.accent.DEFAULT");
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: rgba(139, 92, 246, 0.35);
+  color: #fff;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: theme("fontFamily.display");
+    letter-spacing: -0.01em;
+  }
 }
 
 @layer components {
   .panel {
-    @apply rounded-lg border border-line bg-bg-raised;
+    @apply rounded-xl border border-line/80 bg-bg-raised/70 backdrop-blur-sm;
   }
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-md border border-line bg-bg-raised px-3 py-1.5 text-sm font-medium text-slate-200 transition-colors hover:border-accent/60 hover:text-white disabled:cursor-not-allowed disabled:opacity-40;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-bg-raised/80 px-3.5 py-2 text-sm font-medium text-slate-200 transition-all duration-150 hover:border-accent/50 hover:text-white hover:shadow-glow active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-line disabled:hover:shadow-none;
   }
   .btn-accent {
-    @apply border-accent/40 bg-accent/10 text-accent hover:bg-accent/20 hover:text-accent;
+    @apply border-accent/40 bg-accent/10 text-accent hover:bg-accent/20 hover:text-white;
   }
   .field {
-    @apply w-full rounded-md border border-line bg-bg-inset px-3 py-2 font-mono text-sm text-slate-100 placeholder:text-slate-600 focus:border-accent/60;
+    @apply w-full rounded-lg border border-line bg-bg-inset/80 px-3.5 py-2.5 font-mono text-sm text-slate-100 transition-colors placeholder:text-slate-600 focus:border-accent/60 focus:bg-bg-inset;
   }
   .label {
-    @apply mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400;
+    @apply mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-400;
+  }
+  /* Gradient brand text. */
+  .text-brand-gradient {
+    @apply bg-gradient-to-r from-accent-violet via-accent to-accent-blue bg-clip-text text-transparent;
   }
 }
 
@@ -43,9 +96,21 @@ body {
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1d2633;
+  background: #1b2236;
   border-radius: 6px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2a3645;
+  background: #2a3450;
+}
+
+/* Respect reduced-motion: disable all animation/transition. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
