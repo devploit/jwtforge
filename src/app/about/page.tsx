@@ -63,7 +63,7 @@ export default function AboutPage() {
         <p>
           You can verify this yourself: open your browser&apos;s DevTools →
           Network tab, paste a token, and exercise every feature. You will see
-          no outbound request carrying your data.
+          no outbound request carrying your token, secret, or keys.
         </p>
       </Section>
 
@@ -71,10 +71,21 @@ export default function AboutPage() {
         <p>
           The Decode tab has an optional, opt-in feature to fetch a JWKS from a
           URL you type, so you can verify a signature against a published key
-          set. This is the only outbound request the app can make, it is clearly
-          labeled, and it sends only the URL you provide — never your token. It
-          runs client-side and may be blocked by the remote server&apos;s CORS
-          policy.
+          set. This is the only outbound request the app makes with your input,
+          it is clearly labeled, and it sends only the URL you provide — never
+          your token. It runs client-side and may be blocked by the remote
+          server&apos;s CORS policy.
+        </p>
+      </Section>
+
+      <Section title="Analytics">
+        <p>
+          JWTForge uses Vercel Web Analytics for aggregate visit counts only. It
+          is cookieless, stores no personal data, and never reads form or input
+          values — so it cannot see your token, secret, or keys. As an extra
+          safeguard, the URL reported to analytics is stripped of the{" "}
+          <code>#t=</code> token fragment before any event is sent, so a token
+          in a shared link is never transmitted.
         </p>
       </Section>
 

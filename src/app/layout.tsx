@@ -29,6 +29,7 @@ import { SiteNav } from "@/components/SiteNav";
 import { PrivacyBadge } from "@/components/PrivacyBadge";
 import { Logo } from "@/components/Logo";
 import { JsonLd } from "@/components/JsonLd";
+import { AnalyticsClient } from "@/components/AnalyticsClient";
 import { appJsonLd, websiteJsonLd } from "@/lib/seo";
 import Link from "next/link";
 
@@ -143,6 +144,7 @@ export default function RootLayout({
               hypotheses to verify, not confirmed vulnerabilities.
             </p>
           </footer>
+          <AnalyticsClient />
         </TokenProvider>
       </body>
     </html>

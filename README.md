@@ -105,9 +105,12 @@ HS256/384/512 (HMAC), RS256/384/512 (RSASSA-PKCS1-v1_5), PS256/384/512
   keeps the dependency surface minimal and auditable — appropriate for a
   security tool. The HS256 brute-force loop runs in a Web Worker
   (`src/workers/bruteforce.worker.ts`) so the UI never blocks.
-- Dependencies are limited to the framework itself (`next`, `react`,
-  `react-dom`) and standard dev tooling (TypeScript, Tailwind, ESLint,
-  PostCSS/Autoprefixer). No runtime dependency processes your token.
+- Runtime dependencies are limited to the framework itself (`next`, `react`,
+  `react-dom`) plus `@vercel/analytics` for privacy-friendly, cookieless
+  aggregate visit counts — it never reads inputs and the reported URL is
+  stripped of any `#t=` token fragment before sending. Standard dev tooling
+  only otherwise (TypeScript, Tailwind, ESLint, PostCSS/Autoprefixer). No
+  dependency ever processes your token, secret, or keys.
 
 ## Project layout
 
