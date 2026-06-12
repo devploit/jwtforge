@@ -2,9 +2,17 @@ import type { Metadata } from "next";
 import { AuditClient } from "./AuditClient";
 
 export const metadata: Metadata = {
-  title: "Audit JWT for security signals",
+  title: "JWT Vulnerability Checker & Security Scanner",
   description:
-    "Heuristic JWT vulnerability checker: flags alg:none, weak algorithms, algorithm-confusion risk, kid/jku/x5u injection surface, sensitive claims and more — each framed as a hypothesis to verify, with how to test it against the server.",
+    "Free JWT vulnerability checker: scan a token for alg:none, weak/symmetric algorithms, RS→HS algorithm-confusion risk, kid/jku/x5u injection surface, sensitive claims and more. Each signal explains why it matters and how to test it against the server.",
+  alternates: { canonical: "/audit" },
+  openGraph: {
+    title: "JWT Vulnerability Checker & Security Scanner — JWTForge",
+    description:
+      "Scan a JWT for security signals — alg:none, weak algorithms, kid/jku injection, sensitive claims — with honest, how-to-test guidance.",
+    url: "/audit",
+    images: ["/og.png"],
+  },
 };
 
 export default function AuditPage() {

@@ -2,9 +2,17 @@ import type { Metadata } from "next";
 import { DecodeClient } from "./DecodeClient";
 
 export const metadata: Metadata = {
-  title: "Decode & verify JWT",
+  title: "JWT Decoder & Signature Verifier (HS/RS/ES/PS)",
   description:
-    "Decode a JWT into header, payload and signature, read claims in human-readable form with expiry badges, and verify the signature with a secret, public key, or JWKS URL — all in your browser.",
+    "Decode a JWT into header, payload and signature, read claims in human-readable form with expiry badges, and verify the signature with a secret, public key, or JWKS URL — all client-side in your browser. Supports HS256/384/512, RS, PS and ES algorithms.",
+  alternates: { canonical: "/decode" },
+  openGraph: {
+    title: "JWT Decoder & Signature Verifier — JWTForge",
+    description:
+      "Decode and verify any JWT in your browser. Claims, expiry, and HS/RS/PS/ES signature verification. Nothing leaves the page.",
+    url: "/decode",
+    images: ["/og.png"],
+  },
 };
 
 export default function DecodePage() {

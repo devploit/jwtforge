@@ -2,9 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "How it works & privacy",
+  title: "How It Works & Privacy",
   description:
     "JWTForge runs entirely in your browser using the WebCrypto API. No token, secret, or key is ever sent to a server. Learn the privacy model, the threat model, and the honest scope of the Audit feature.",
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: "How JWTForge Works & Privacy",
+    description:
+      "100% client-side JWT toolkit. The privacy model, threat model, and why Audit signals are hypotheses to verify — not confirmed vulnerabilities.",
+    url: "/about",
+    images: ["/og.png"],
+  },
 };
 
 function Section({

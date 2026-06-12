@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Chakra_Petch, IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { TokenProvider } from "@/lib/token-context";
@@ -52,6 +52,9 @@ export const metadata: Metadata = {
   ],
   applicationName: "JWTForge",
   authors: [{ name: "JWTForge" }],
+  creator: "JWTForge",
+  category: "technology",
+  alternates: { canonical: "/" },
   openGraph: {
     title: "JWTForge — JWT Security Scanner & Attack Toolkit",
     description:
@@ -68,7 +71,24 @@ export const metadata: Metadata = {
       "Attacker-minded, fully client-side JWT toolkit. Nothing ever leaves your browser.",
     images: ["/og.png"],
   },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#070912",
+  colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

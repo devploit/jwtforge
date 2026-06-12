@@ -2,9 +2,17 @@ import type { Metadata } from "next";
 import { AttackClient } from "./AttackClient";
 
 export const metadata: Metadata = {
-  title: "Generate JWT attack tokens & artifacts",
+  title: "JWT Attack Tool Online — Forge Tokens & Artifacts",
   description:
-    "JWT attack tool: generate alg:none, RS→HS algorithm-confusion, kid injection, jwk/jku self-signed and tampered tokens, plus an in-browser HS256 brute-forcer. Export ready-to-run curl, .http, Burp, nuclei and jwt_tool artifacts. No requests sent from the app.",
+    "JWT attack tool online: generate alg:none, RS256→HS256 algorithm-confusion, kid injection, jwk/jku self-signed and tampered tokens, plus an in-browser HS256 brute-forcer. Export ready-to-run curl, .http, Burp Intruder, nuclei and jwt_tool artifacts. No requests sent from the app.",
+  alternates: { canonical: "/attack" },
+  openGraph: {
+    title: "JWT Attack Tool Online — JWTForge",
+    description:
+      "Forge alg:none, algorithm-confusion, kid/jwk injection and brute-forced JWTs, then export curl/Burp/nuclei/jwt_tool artifacts. Client-side only.",
+    url: "/attack",
+    images: ["/og.png"],
+  },
 };
 
 export default function AttackPage() {
