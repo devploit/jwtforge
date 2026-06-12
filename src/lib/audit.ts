@@ -12,6 +12,8 @@ export interface AuditSignal {
   howToTest: string;
   /** Anchor id of the related Attack-tab generator, if any. */
   attackLink?: string;
+  /** Slug of an in-depth /guides/<slug> article, if any. */
+  guide?: string;
 }
 
 const SECRET_KEY_HINTS =
@@ -48,6 +50,7 @@ export function auditToken(decoded: DecodedJwt, now: Date): AuditSignal[] {
       howToTest:
         "Send a token with alg set to 'none' (and case variants) and an empty signature segment. If the server accepts it, authentication is fully bypassable.",
       attackLink: "alg-none",
+      guide: "jwt-none-algorithm-attack",
     });
   }
 
@@ -87,6 +90,7 @@ export function auditToken(decoded: DecodedJwt, now: Date): AuditSignal[] {
       howToTest:
         "Obtain the server's RSA public key, then use the Attack tab to re-sign the token as HS256 with that key as the HMAC secret. If accepted, the server trusts the header alg.",
       attackLink: "alg-confusion",
+      guide: "jwt-algorithm-confusion",
     });
   }
 

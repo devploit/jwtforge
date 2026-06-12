@@ -73,14 +73,24 @@ export function AuditClient() {
                   <dd className="text-slate-300">{s.howToTest}</dd>
                 </div>
               </dl>
-              {s.attackLink && (
-                <Link
-                  href={`/attack#${s.attackLink}`}
-                  className="mt-3 inline-flex text-sm text-accent hover:underline"
-                >
-                  → Generate the attack token in the Attack tab
-                </Link>
-              )}
+              <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1">
+                {s.attackLink && (
+                  <Link
+                    href={`/attack#${s.attackLink}`}
+                    className="inline-flex text-sm text-accent hover:underline"
+                  >
+                    → Generate the attack token
+                  </Link>
+                )}
+                {s.guide && (
+                  <Link
+                    href={`/guides/${s.guide}`}
+                    className="inline-flex text-sm text-slate-400 hover:text-accent hover:underline"
+                  >
+                    → Learn how it works
+                  </Link>
+                )}
+              </div>
               <p className="mt-3 border-t border-line pt-2 text-xs italic text-slate-500">
                 Hypothesis to verify — not a confirmed finding.
               </p>
