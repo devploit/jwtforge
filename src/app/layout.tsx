@@ -28,6 +28,8 @@ const mono = JetBrains_Mono({
 import { SiteNav } from "@/components/SiteNav";
 import { PrivacyBadge } from "@/components/PrivacyBadge";
 import { Logo } from "@/components/Logo";
+import { JsonLd } from "@/components/JsonLd";
+import { appJsonLd, websiteJsonLd } from "@/lib/seo";
 import Link from "next/link";
 
 const SITE_URL = "https://jwtforge.com";
@@ -102,6 +104,8 @@ export default function RootLayout({
       className={`scroll-smooth ${display.variable} ${sans.variable} ${mono.variable}`}
     >
       <body className="min-h-screen font-sans antialiased">
+        <JsonLd data={appJsonLd()} />
+        <JsonLd data={websiteJsonLd()} />
         <TokenProvider>
           <a
             href="#main"

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { TokenGlyph } from "@/components/TokenGlyph";
+import { JsonLd } from "@/components/JsonLd";
+import { FAQS, faqJsonLd } from "@/lib/seo";
 
 const FEATURES = [
   {
@@ -145,6 +147,30 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+
+      {/* FAQ — visible content that also powers FAQPage structured data */}
+      <section aria-labelledby="faq-heading" className="space-y-5">
+        <h2 id="faq-heading" className="text-2xl font-bold text-slate-100">
+          Frequently asked questions
+        </h2>
+        <div className="divide-y divide-line/70 overflow-hidden rounded-xl border border-line/80 bg-bg-raised/50">
+          {FAQS.map((f) => (
+            <details key={f.q} className="group px-5 py-4 open:bg-bg-raised/60">
+              <summary className="flex cursor-pointer items-center justify-between gap-4 text-base font-medium text-slate-100 marker:content-none">
+                {f.q}
+                <span className="shrink-0 text-accent transition-transform duration-200 group-open:rotate-45">
+                  +
+                </span>
+              </summary>
+              <p className="mt-3 text-sm leading-relaxed text-slate-400">
+                {f.a}
+              </p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <JsonLd data={faqJsonLd()} />
     </div>
   );
 }
