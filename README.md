@@ -36,6 +36,8 @@ database, no secrets — deploys to Vercel as-is with the **Next.js** preset.
    explicit valid / expired / not-yet-valid badge. Verifies the signature with a
    pasted secret (HS\*), public key / JWK (RS\*/PS\*/ES\*), or an opt-in JWKS
    URL fetch. Editing the decoded header/payload re-encodes the token live.
+   Tokens are shareable via a `#t=<jwt>` URL fragment (which never reaches a
+   server) using the **Copy link** button.
 
 2. **Audit** — Static heuristic signals: `alg:none`, weak/symmetric algorithms,
    algorithm-confusion risk, missing/over-long `exp`, future `iat`, sensitive
@@ -52,10 +54,11 @@ database, no secrets — deploys to Vercel as-is with the **Next.js** preset.
    - HS256 secret brute-force (dictionary attack in a **Web Worker**)
    - Claim tampering (escalate roles, change claims, re-sign or leave unsigned)
 
-   For each, copy-to-clipboard **curl**, **.http** (VS Code REST Client /
+   For each, copy- or download-to-file **curl**, **.http** (VS Code REST Client /
    IntelliJ), **Burp Intruder** payload list, **nuclei** template, and the
    equivalent **jwt_tool** command — with placeholders for your target URL and
-   header. The app never fires requests; you run the artifacts yourself.
+   header. The generated JWKS and attacker private key are downloadable too. The
+   app never fires requests; you run the artifacts yourself.
 
 ## Privacy & threat model
 

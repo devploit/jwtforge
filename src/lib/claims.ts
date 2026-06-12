@@ -14,7 +14,9 @@ export type ValidityState =
   | { kind: "not-yet-valid"; until: string }
   | { kind: "no-exp" };
 
-const RELATIVE = new Intl.RelativeTimeFormat(undefined, { numeric: "auto" });
+// Force en-US so relative times render in English on every machine, matching
+// the rest of the (English-only) UI rather than the visitor's system locale.
+const RELATIVE = new Intl.RelativeTimeFormat("en-US", { numeric: "auto" });
 
 export function relativeTime(target: Date, now: Date): string {
   const diffMs = target.getTime() - now.getTime();

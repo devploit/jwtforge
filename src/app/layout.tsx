@@ -89,7 +89,7 @@ export default function RootLayout({
           >
             Skip to content
           </a>
-          <header className="border-b border-line bg-bg-raised/60 backdrop-blur">
+          <header className="sticky top-0 z-40 border-b border-line/70 bg-bg/70 backdrop-blur-xl">
             <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
                 <Link href="/" className="flex items-center gap-2.5">
