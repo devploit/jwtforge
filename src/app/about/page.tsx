@@ -65,6 +65,20 @@ export default function AboutPage() {
           Network tab, paste a token, and exercise every feature. You will see
           no outbound request carrying your token, secret, or keys.
         </p>
+        <p>
+          And you don&apos;t have to take our word for it — JWTForge is open
+          source. Read the code, check what the deployed commit does, and audit
+          the claims on this page at{" "}
+          <a
+            href="https://github.com/devploit/jwtforge"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent hover:underline"
+          >
+            github.com/devploit/jwtforge
+          </a>
+          .
+        </p>
       </Section>
 
       <Section title="The one exception: JWKS fetch">

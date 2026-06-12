@@ -28,6 +28,7 @@ const mono = JetBrains_Mono({
 import { SiteNav } from "@/components/SiteNav";
 import { PrivacyBadge } from "@/components/PrivacyBadge";
 import { Logo } from "@/components/Logo";
+import { GithubLink } from "@/components/GithubLink";
 import { JsonLd } from "@/components/JsonLd";
 import { AnalyticsClient } from "@/components/AnalyticsClient";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
@@ -127,7 +128,10 @@ export default function RootLayout({
                 </Link>
                 <PrivacyBadge />
               </div>
-              <SiteNav />
+              <div className="flex items-center gap-3 sm:gap-4">
+                <SiteNav />
+                <GithubLink className="border-l border-line/70 pl-3 sm:pl-4" />
+              </div>
             </div>
           </header>
           <main id="main" className="mx-auto max-w-6xl px-4 py-6">
@@ -156,6 +160,15 @@ export default function RootLayout({
                 @devploit
               </a>{" "}
               <span className="text-slate-700">— built in the browser, for the browser</span>
+              <span className="mx-2 text-slate-700">·</span>
+              <a
+                href="https://github.com/devploit/jwtforge"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-400 transition-colors hover:text-accent"
+              >
+                source on GitHub
+              </a>
             </p>
           </footer>
           <AnalyticsClient />
