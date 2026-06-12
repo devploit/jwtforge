@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { TokenGlyph } from "@/components/TokenGlyph";
 import { JsonLd } from "@/components/JsonLd";
-import { FAQS, faqJsonLd } from "@/lib/seo";
+import { FAQS, GUIDES, faqJsonLd } from "@/lib/seo";
 
 const FEATURES = [
   {
@@ -145,6 +145,36 @@ export default function HomePage() {
           >
             How this works &amp; privacy →
           </Link>
+        </div>
+      </section>
+
+      {/* Guides teaser — internal links to the content hub */}
+      <section aria-labelledby="guides-heading" className="space-y-4">
+        <div className="flex items-baseline justify-between">
+          <h2 id="guides-heading" className="text-2xl font-bold text-slate-100">
+            Learn the attacks
+          </h2>
+          <Link
+            href="/guides"
+            className="text-sm font-medium text-accent hover:underline"
+          >
+            All guides →
+          </Link>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {GUIDES.slice(0, 3).map((g) => (
+            <Link
+              key={g.slug}
+              href={`/guides/${g.slug}`}
+              className="panel group flex flex-col gap-2 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/50"
+            >
+              <h3 className="text-base font-bold text-slate-100">{g.title}</h3>
+              <p className="text-sm leading-relaxed text-slate-400">{g.blurb}</p>
+              <span className="mt-auto pt-1 text-sm font-medium text-accent transition-transform group-hover:translate-x-1">
+                Read →
+              </span>
+            </Link>
+          ))}
         </div>
       </section>
 
