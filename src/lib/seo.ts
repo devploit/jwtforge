@@ -25,6 +25,30 @@ export const GUIDES: GuideMeta[] = [
     blurb:
       "Strip the signature and set alg to none to bypass verification — variants, testing, and remediation.",
   },
+  {
+    slug: "jwt-kid-injection",
+    title: "JWT kid Header Injection (path traversal, SQLi, command injection)",
+    description:
+      "How an unsanitized JWT 'kid' header becomes a path-traversal, SQL-injection or command-injection vector — including the /dev/null empty-key forgery — with how to test and fix it.",
+    blurb:
+      "Turn an unsanitized kid header into path traversal, SQLi, or command injection — including the /dev/null empty-key forgery.",
+  },
+  {
+    slug: "how-to-verify-a-jwt",
+    title: "How to Verify a JWT (Correctly)",
+    description:
+      "A practical guide to verifying a JWT's signature and claims correctly — algorithm pinning, key handling, expiry/audience/issuer checks — and the mistakes that cause bypasses.",
+    blurb:
+      "Verify signature and claims the right way: pin the algorithm, check exp/nbf/aud/iss, and avoid the common bypasses.",
+  },
+  {
+    slug: "jwt-security-best-practices",
+    title: "JWT Security Best Practices",
+    description:
+      "A checklist of JWT security best practices: algorithm pinning, short lifetimes, key rotation, audience/issuer validation, avoiding sensitive data in claims, and storage.",
+    blurb:
+      "A practical checklist: algorithm pinning, short lifetimes, key rotation, claim validation, and safe storage.",
+  },
 ];
 
 export interface Faq {

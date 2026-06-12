@@ -110,6 +110,7 @@ export function auditToken(decoded: DecodedJwt, now: Date): AuditSignal[] {
             ? "Use the Attack tab to inject path-traversal / SQLi / command-injection payloads into 'kid' and observe server behavior."
             : `Use the Attack tab to set "${h}" to an attacker-hosted key and sign with the matching private key. If verified, the server trusts attacker-supplied key sources.`,
         attackLink: h === "kid" ? "kid-injection" : "jwk-injection",
+        guide: h === "kid" ? "jwt-kid-injection" : undefined,
       });
     }
   }
