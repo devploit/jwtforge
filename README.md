@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="public/logo.png" alt="JWTForge logo" width="120" height="120" />
+
 # JWTForge — JWT Security Toolkit
 
 **The attacker-minded, fully client-side alternative to jwt.io.**
