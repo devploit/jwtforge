@@ -27,15 +27,24 @@ export function TokenProvider({ children }: { children: ReactNode }) {
   const [token, setTokenState] = useState("");
   const [hydrated, setHydrated] = useState(false);
 
-  // Hydrate from localStorage after mount (avoids SSR mismatch).
+  // Hydrate after mount (avoids SSR mismatch). A `#t=<jwt>` URL fragment wins
+  // over the stored token so decode links are shareable; the fragment never
+  // hits the network (fragments are not sent to servers).
   useEffect(() => {
     try {
+      const hash = window.location.hash;
+      const match = /[#&]t=([^&]+)/.exec(hash);
+      if (match) {
+        setTokenState(decodeURIComponent(match[1]));
+        return;
+      }
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) setTokenState(saved);
     } catch {
-      // localStorage may be unavailable (private mode); ignore.
+      // localStorage / location may be unavailable; ignore.
+    } finally {
+      setHydrated(true);
     }
-    setHydrated(true);
   }, []);
 
   useEffect(() => {
