@@ -24,7 +24,15 @@ Other scripts:
 npm run build    # production build (also runs the TypeScript type-check)
 npm run start    # serve the production build
 npm run lint     # eslint
+npm test         # vitest — unit tests for the crypto/decode/audit/attack logic
 ```
+
+Tests focus on the security-critical core: base64url round-trips, decode edge
+cases, signature verification, and — crucially — that every attack generator
+emits a **cryptographically valid forgery** (alg:none, kid `/dev/null`
+empty-key, algorithm confusion, and a jwk-injection token that verifies against
+its own embedded key). CI (GitHub Actions) runs lint + tests + build on every
+push and PR.
 
 Requires Node 18+ (developed on Node 22/26). No environment variables, no
 database, no secrets — deploys to Vercel as-is with the **Next.js** preset.
