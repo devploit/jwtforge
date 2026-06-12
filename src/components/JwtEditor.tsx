@@ -1,6 +1,12 @@
 "use client";
 
-import { useRef, type ChangeEvent, type UIEvent } from "react";
+import {
+  useRef,
+  type ChangeEvent,
+  type ClipboardEvent,
+  type UIEvent,
+} from "react";
+import { extractJwt } from "@/lib/jwt";
 
 /**
  * A JWT text editor with inline, segment color-coded syntax highlighting —
@@ -35,6 +41,17 @@ export function JwtEditor({
     }
   }
 
+  // Smart paste: if the pasted text wraps a JWT in an Authorization header,
+  // curl command, JSON, or quotes, drop the noise and keep just the token.
+  function onPaste(e: ClipboardEvent<HTMLTextAreaElement>) {
+    const pasted = e.clipboardData.getData("text");
+    const jwt = extractJwt(pasted);
+    if (jwt && jwt !== pasted.trim()) {
+      e.preventDefault();
+      onChange(jwt);
+    }
+  }
+
   // Shared box model so the overlay and textarea align exactly.
   const boxClasses =
     "m-0 w-full whitespace-pre-wrap break-all rounded-lg border px-4 py-3 font-mono text-base leading-relaxed";
@@ -56,6 +73,7 @@ export function JwtEditor({
         aria-describedby={ariaDescribedBy}
         value={value}
         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => onChange(e.target.value)}
+        onPaste={onPaste}
         onScroll={syncScroll}
         rows={rows}
         spellCheck={false}

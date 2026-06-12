@@ -132,6 +132,19 @@ export function assembleToken(
   return `${signingInput}.${signatureB64}`;
 }
 
+/**
+ * Find a JWT embedded in arbitrary pasted text — an `Authorization: Bearer …`
+ * header, a curl command, a JSON blob, or quotes/whitespace. Every JWS starts
+ * with `eyJ` (base64url of `{"`), so we match that shape. Returns the first
+ * JWT found, or null if the text doesn't obviously contain one.
+ */
+export function extractJwt(text: string): string | null {
+  const match = text.match(
+    /eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]*/,
+  );
+  return match ? match[0] : null;
+}
+
 export type AlgFamily = "HMAC" | "RSA" | "RSA-PSS" | "ECDSA" | "none" | "unknown";
 
 export function algFamily(alg: string | undefined): AlgFamily {

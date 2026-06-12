@@ -15,9 +15,8 @@ export function SiteNav() {
   return (
     <nav aria-label="Primary" className="flex items-center gap-1">
       {TABS.map((tab) => {
-        const active =
-          pathname === tab.href ||
-          (tab.href === "/decode" && pathname === "/");
+        // The logo is "home"; on the landing page no tab is active.
+        const active = pathname === tab.href;
         return (
           <Link
             key={tab.href}
