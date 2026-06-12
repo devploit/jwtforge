@@ -1,35 +1,67 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { algFamily, type DecodedJwt } from "@/lib/jwt";
 import { verifySignature, type VerifyResult } from "@/lib/crypto";
 
-export function VerifyPanel({ decoded }: { decoded: DecodedJwt }) {
+export function VerifyPanel({
+  decoded,
+  keyMaterial,
+  onKeyChange,
+  secretBase64Url,
+  onSecretBase64UrlChange,
+}: {
+  decoded: DecodedJwt;
+  keyMaterial: string;
+  onKeyChange: (v: string) => void;
+  secretBase64Url: boolean;
+  onSecretBase64UrlChange: (v: boolean) => void;
+}) {
   const alg = typeof decoded.header.alg === "string" ? decoded.header.alg : "";
   const family = algFamily(alg);
-  const [keyMaterial, setKeyMaterial] = useState("");
   const [result, setResult] = useState<VerifyResult | null>(null);
-  const [busy, setBusy] = useState(false);
   const [jwksUrl, setJwksUrl] = useState("");
   const [jwksStatus, setJwksStatus] = useState<string | null>(null);
+  const reqId = useRef(0);
 
   const isHmac = family === "HMAC";
   const placeholder = isHmac
     ? "HMAC secret (e.g. your-256-bit-secret)"
     : "Public key (PEM -----BEGIN PUBLIC KEY-----) or JWK JSON";
 
-  async function runVerify(material: string) {
-    setBusy(true);
-    setResult(null);
-    const res = await verifySignature(
-      alg,
-      decoded.raw.signingInput,
-      decoded.raw.signature,
-      material,
-    );
-    setResult(res);
-    setBusy(false);
-  }
+  // Live verification: re-runs (debounced) whenever the token, key, or the
+  // base64url toggle changes — no button, like jwt.io but immediate.
+  useEffect(() => {
+    if (family === "none") {
+      setResult(null);
+      return;
+    }
+    if (!keyMaterial.trim()) {
+      setResult(null);
+      return;
+    }
+    const id = ++reqId.current;
+    const handle = setTimeout(async () => {
+      const res = await verifySignature(
+        alg,
+        decoded.raw.signingInput,
+        decoded.raw.signature,
+        keyMaterial,
+        { secretBase64Url: isHmac && secretBase64Url },
+      );
+      // Ignore stale results from earlier keystrokes.
+      if (id === reqId.current) setResult(res);
+    }, 180);
+    return () => clearTimeout(handle);
+  }, [
+    alg,
+    family,
+    isHmac,
+    keyMaterial,
+    secretBase64Url,
+    decoded.raw.signingInput,
+    decoded.raw.signature,
+  ]);
 
   async function fetchJwks() {
     setJwksStatus(null);
@@ -47,49 +79,54 @@ export function VerifyPanel({ decoded }: { decoded: DecodedJwt }) {
       const keys = json.keys ?? [];
       const kid = decoded.header.kid;
       const match =
-        (typeof kid === "string" && keys.find((k) => k.kid === kid)) ||
-        keys[0];
+        (typeof kid === "string" && keys.find((k) => k.kid === kid)) || keys[0];
       if (!match) {
         setJwksStatus("No keys found in JWKS response.");
         return;
       }
-      const jwkStr = JSON.stringify(match, null, 2);
-      setKeyMaterial(jwkStr);
-      setJwksStatus(
-        `Loaded JWK (kid=${match.kid ?? "n/a"}). Now click Verify.`,
-      );
+      onKeyChange(JSON.stringify(match, null, 2));
+      setJwksStatus(`Loaded JWK (kid=${match.kid ?? "n/a"}).`);
     } catch (err) {
       setJwksStatus(
-        `Fetch error (often CORS): ${
-          err instanceof Error ? err.message : "unknown"
-        }`,
+        `Fetch error (often CORS): ${err instanceof Error ? err.message : "unknown"}`,
       );
     }
   }
 
   return (
     <section className="panel space-y-3 p-4">
-      <h3 className="text-sm font-semibold text-slate-100">
-        Verify signature{" "}
-        <span className="font-normal text-slate-500">
-          ({alg || "no alg"})
-        </span>
-      </h3>
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-slate-100">
+          Verify signature
+        </h3>
+        <span className="font-mono text-xs text-slate-500">{alg || "no alg"}</span>
+      </div>
 
-      {family === "none" ? (
-        <p className="text-sm text-sev-med">
-          Algorithm is <code>none</code> — there is no signature to verify.
-        </p>
-      ) : (
+      <VerifyBanner family={family} hasKey={!!keyMaterial.trim()} result={result} />
+
+      {family !== "none" && (
         <>
           <div>
-            <label htmlFor="verify-key" className="label">
-              {isHmac ? "Secret" : "Public key / JWK"}
-            </label>
+            <div className="flex items-center justify-between">
+              <label htmlFor="verify-key" className="label">
+                {isHmac ? "Secret" : "Public key / JWK"}
+              </label>
+              {isHmac && (
+                <label className="mb-1.5 flex cursor-pointer items-center gap-1.5 text-xs text-slate-400">
+                  <input
+                    type="checkbox"
+                    checked={secretBase64Url}
+                    onChange={(e) => onSecretBase64UrlChange(e.target.checked)}
+                    className="accent-accent"
+                  />
+                  secret is base64url-encoded
+                </label>
+              )}
+            </div>
             <textarea
               id="verify-key"
               value={keyMaterial}
-              onChange={(e) => setKeyMaterial(e.target.value)}
+              onChange={(e) => onKeyChange(e.target.value)}
               rows={isHmac ? 2 : 5}
               spellCheck={false}
               placeholder={placeholder}
@@ -124,8 +161,8 @@ export function VerifyPanel({ decoded }: { decoded: DecodedJwt }) {
                 </button>
               </div>
               <p className="mt-1.5 text-xs text-slate-500">
-                This is the one optional outbound request in JWTForge. It fetches
-                the JWKS from the URL you provide (client-side; may be blocked by
+                The one optional outbound request in JWTForge. It fetches the
+                JWKS from the URL you provide (client-side; may be blocked by
                 CORS). Your token is never sent.
               </p>
               {jwksStatus && (
@@ -133,51 +170,91 @@ export function VerifyPanel({ decoded }: { decoded: DecodedJwt }) {
               )}
             </div>
           )}
-
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              className="btn btn-accent"
-              onClick={() => runVerify(keyMaterial)}
-              disabled={busy || !keyMaterial.trim()}
-            >
-              {busy ? "Verifying…" : "Verify"}
-            </button>
-            {result && <ResultBadge result={result} />}
-          </div>
         </>
       )}
     </section>
   );
 }
 
-function ResultBadge({ result }: { result: VerifyResult }) {
-  const map = {
-    verified: {
-      text: "Signature verified ✓",
-      cls: "border-green-500/40 bg-green-500/10 text-green-400",
-    },
-    failed: {
-      text: "Signature does NOT match ✗",
-      cls: "border-sev-high/40 bg-sev-high/10 text-sev-high",
-    },
-    unsupported: {
-      text: "Can't verify",
-      cls: "border-sev-info/40 bg-sev-info/10 text-sev-info",
-    },
-    error: {
-      text: "Verification error",
-      cls: "border-sev-med/40 bg-sev-med/10 text-sev-med",
-    },
-  } as const;
-  const info = map[result.status];
+function VerifyBanner({
+  family,
+  hasKey,
+  result,
+}: {
+  family: ReturnType<typeof algFamily>;
+  hasKey: boolean;
+  result: VerifyResult | null;
+}) {
+  if (family === "none") {
+    return (
+      <Banner tone="warn" icon="!">
+        Algorithm is <code className="mx-1">none</code> — there is no signature
+        to verify.
+      </Banner>
+    );
+  }
+  if (!hasKey) {
+    return (
+      <Banner tone="idle" icon="○">
+        Enter a {family === "HMAC" ? "secret" : "public key / JWK"} to verify the
+        signature.
+      </Banner>
+    );
+  }
+  if (!result) {
+    return (
+      <Banner tone="idle" icon="…">
+        Verifying…
+      </Banner>
+    );
+  }
+  if (result.status === "verified") {
+    return (
+      <Banner tone="ok" icon="✓">
+        <strong>Signature verified.</strong> This token is authentic for the
+        supplied key.
+      </Banner>
+    );
+  }
+  if (result.status === "failed") {
+    return (
+      <Banner tone="bad" icon="✗">
+        <strong>Invalid signature.</strong> The token does not match this key.
+      </Banner>
+    );
+  }
   return (
-    <span
-      className={`inline-flex items-center rounded border px-2.5 py-1 text-sm font-semibold ${info.cls}`}
-      title={"reason" in result ? result.reason : undefined}
+    <Banner tone="warn" icon="!">
+      {"reason" in result ? result.reason : "Can't verify with this input."}
+    </Banner>
+  );
+}
+
+const TONES = {
+  ok: "border-green-500/40 bg-green-500/10 text-green-300",
+  bad: "border-sev-high/40 bg-sev-high/10 text-sev-high",
+  warn: "border-sev-med/40 bg-sev-med/10 text-sev-med",
+  idle: "border-line bg-bg-inset/60 text-slate-400",
+} as const;
+
+function Banner({
+  tone,
+  icon,
+  children,
+}: {
+  tone: keyof typeof TONES;
+  icon: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      role="status"
+      className={`flex items-center gap-2.5 rounded-lg border px-3 py-2.5 text-sm ${TONES[tone]}`}
     >
-      {info.text}
-      {"reason" in result ? `: ${result.reason}` : ""}
-    </span>
+      <span className="font-mono text-base leading-none" aria-hidden="true">
+        {icon}
+      </span>
+      <span>{children}</span>
+    </div>
   );
 }

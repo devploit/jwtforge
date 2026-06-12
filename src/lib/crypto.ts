@@ -51,16 +51,6 @@ export async function hmacSign(
   return bytesToBase64Url(new Uint8Array(sig));
 }
 
-async function hmacVerify(
-  alg: string,
-  secret: string,
-  signingInput: string,
-  signatureB64: string,
-): Promise<boolean> {
-  const expected = await hmacSign(alg, secret, signingInput);
-  return constantTimeEqual(expected, signatureB64);
-}
-
 // ── PEM / key import ──────────────────────────────────────────────────────
 
 function pemToArrayBuffer(pem: string): ArrayBuffer {
@@ -195,6 +185,7 @@ export async function verifySignature(
   signingInput: string,
   signatureB64: string,
   keyMaterial: string,
+  opts: { secretBase64Url?: boolean } = {},
 ): Promise<VerifyResult> {
   const family = algFamily(alg);
   try {
@@ -205,7 +196,11 @@ export async function verifySignature(
       };
     }
     if (family === "HMAC") {
-      const ok = await hmacVerify(alg, keyMaterial, signingInput, signatureB64);
+      const secret = opts.secretBase64Url
+        ? base64UrlToBytes(keyMaterial)
+        : keyMaterial;
+      const expected = await hmacSign(alg, secret, signingInput);
+      const ok = constantTimeEqual(expected, signatureB64);
       return { status: ok ? "verified" : "failed" };
     }
     if (family === "RSA" || family === "RSA-PSS" || family === "ECDSA") {
