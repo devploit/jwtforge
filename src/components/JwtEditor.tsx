@@ -37,7 +37,7 @@ export function JwtEditor({
 
   // Shared box model so the overlay and textarea align exactly.
   const boxClasses =
-    "m-0 w-full whitespace-pre-wrap break-all rounded-lg border px-3.5 py-2.5 font-mono text-sm leading-relaxed";
+    "m-0 w-full whitespace-pre-wrap break-all rounded-lg border px-4 py-3 font-mono text-base leading-relaxed";
 
   return (
     <div className="relative">

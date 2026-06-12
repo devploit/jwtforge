@@ -47,12 +47,12 @@ export function GeneratedTokens({
         {tokens.map((t, i) => (
           <div key={i} className="rounded-md border border-line bg-bg-inset p-3">
             <div className="mb-1 flex items-center justify-between gap-2">
-              <span className="text-xs font-semibold text-slate-300">
+              <span className="text-sm font-semibold text-slate-300">
                 {t.label}
               </span>
               <CopyButton text={t.token} label="Copy token" />
             </div>
-            <p className="break-all font-mono text-xs text-slate-200">
+            <p className="break-all font-mono text-sm text-slate-200">
               {t.token}
             </p>
             {t.note && (
@@ -89,7 +89,7 @@ export function GeneratedTokens({
                 setTab(ARTIFACT_TABS[next].key);
                 document.getElementById(tabId(ARTIFACT_TABS[next].key))?.focus();
               }}
-              className={`rounded-t-md px-3 py-1.5 text-xs font-medium transition-colors ${
+              className={`rounded-t-md px-3 py-2 text-sm font-medium transition-colors ${
                 tab === a.key
                   ? "bg-bg-raised text-accent"
                   : "text-slate-400 hover:text-slate-100"

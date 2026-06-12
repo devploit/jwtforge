@@ -126,7 +126,7 @@ export function SegmentPanels({
             {alg || "—"}
           </span>
         </div>
-        <p className="break-all font-mono text-xs text-seg-sig">
+        <p className="break-all font-mono text-sm text-seg-sig">
           {decoded.raw.signature || (
             <span className="text-slate-500">(empty — unsigned)</span>
           )}
@@ -178,7 +178,7 @@ function EditablePanel({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         spellCheck={false}
-        className={`w-full resize-y bg-transparent font-mono text-xs leading-relaxed outline-none ${minH} ${color} ${
+        className={`w-full resize-y bg-transparent font-mono text-sm leading-relaxed outline-none ${minH} ${color} ${
           error ? "ring-1 ring-sev-high/40" : ""
         } rounded`}
       />

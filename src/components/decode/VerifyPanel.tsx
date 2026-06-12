@@ -249,7 +249,7 @@ function Banner({
   return (
     <div
       role="status"
-      className={`flex items-center gap-2.5 rounded-lg border px-3 py-2.5 text-sm ${TONES[tone]}`}
+      className={`flex items-center gap-2.5 rounded-lg border px-3.5 py-3 text-[15px] ${TONES[tone]}`}
     >
       <span className="font-mono text-base leading-none" aria-hidden="true">
         {icon}

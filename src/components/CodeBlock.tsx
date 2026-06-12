@@ -29,7 +29,7 @@ export function CodeBlock({
           </div>
         </div>
       )}
-      <pre className="overflow-x-auto p-3 text-xs leading-relaxed text-slate-200">
+      <pre className="overflow-x-auto p-3 text-sm leading-relaxed text-slate-200">
         <code>{code}</code>
       </pre>
     </div>

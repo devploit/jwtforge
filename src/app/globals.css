@@ -79,7 +79,7 @@ body > * {
     @apply border-accent/40 bg-accent/10 text-accent hover:bg-accent/20 hover:text-white;
   }
   .field {
-    @apply w-full rounded-lg border border-line bg-bg-inset/80 px-3.5 py-2.5 font-mono text-sm text-slate-100 transition-colors placeholder:text-slate-600 focus:border-accent/60 focus:bg-bg-inset;
+    @apply w-full rounded-lg border border-line bg-bg-inset/80 px-3.5 py-2.5 font-mono text-[15px] text-slate-100 transition-colors placeholder:text-slate-600 focus:border-accent/60 focus:bg-bg-inset;
   }
   .label {
     @apply mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-400;
