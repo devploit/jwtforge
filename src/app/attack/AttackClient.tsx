@@ -37,6 +37,7 @@ export function AttackClient() {
 
         {decoded && (
           <div className="space-y-5">
+            <JumpNav />
             <ArtifactConfigForm config={config} onChange={setConfig} />
 
             <AttackSection
@@ -90,5 +91,36 @@ export function AttackClient() {
         )}
       </EthicalGate>
     </div>
+  );
+}
+
+const JUMP_LINKS = [
+  ["alg-none", "alg:none"],
+  ["alg-confusion", "confusion"],
+  ["kid-injection", "kid"],
+  ["jwk-injection", "jwk/jku"],
+  ["bruteforce", "brute-force"],
+  ["tamper", "tamper"],
+];
+
+function JumpNav() {
+  return (
+    <nav
+      aria-label="Jump to attack generator"
+      className="sticky top-[57px] z-30 -mx-4 overflow-x-auto border-y border-line/70 bg-bg/80 px-4 py-2 backdrop-blur-xl"
+    >
+      <ul className="flex gap-2">
+        {JUMP_LINKS.map(([id, label]) => (
+          <li key={id}>
+            <a
+              href={`#${id}`}
+              className="inline-block whitespace-nowrap rounded-md border border-line bg-bg-raised/60 px-2.5 py-1 font-mono text-xs text-slate-300 transition-colors hover:border-accent/50 hover:text-accent"
+            >
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }
