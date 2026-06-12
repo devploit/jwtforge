@@ -1,15 +1,30 @@
+<div align="center">
+
 # JWTForge — JWT Security Toolkit
 
-A privacy-first, **fully client-side** JWT tooling site for security
-professionals (pentesters, bug bounty hunters, AppSec engineers). It is the
-"attacker-minded" alternative to jwt.io: decode and verify tokens, audit them
-for security signals, and generate forged attack tokens with ready-to-run
-artifacts.
+**The attacker-minded, fully client-side alternative to jwt.io.**
+Decode &amp; verify JWTs, audit them for vulnerability signals, and forge
+attack tokens with ready-to-run artifacts — entirely in your browser.
+
+[**jwtforge.com**](https://jwtforge.com) · MIT licensed · built with Next.js + WebCrypto
+
+</div>
+
+---
 
 **Nothing ever leaves your browser.** No token, secret, or key is sent to a
-server. The app makes no backend calls for any core feature.
+server; the app makes no backend calls for any core feature. The one optional
+outbound request is the JWKS-URL fetch on the Decode tab, which sends only the
+URL you type — never your token. Verify it yourself in DevTools → Network.
 
-Live at **[jwtforge.com](https://jwtforge.com)**.
+### Why it exists
+
+jwt.io is great at decoding. JWTForge is built for the **security** side of
+JWTs that general decoders ignore: it surfaces vulnerability signals
+(`alg:none`, weak/symmetric algorithms, RS→HS algorithm confusion,
+`kid`/`jku`/`jwk` injection, sensitive claims) and generates working forged
+tokens plus copy/download artifacts (curl, `.http`, Burp Intruder, nuclei,
+`jwt_tool`) that you run from your own authorized environment.
 
 ## Local development
 
@@ -121,14 +136,31 @@ HS256/384/512 (HMAC), RS256/384/512 (RSASSA-PKCS1-v1_5), PS256/384/512
   Tailwind, ESLint, PostCSS/Autoprefixer, Vitest). No dependency ever processes
   your token, secret, or keys.
 
+## Security posture
+
+A security tool should hold itself to its own standard:
+
+- **Nonce-based Content-Security-Policy** (`script-src 'self' 'nonce-…'
+  'strict-dynamic'` — no `unsafe-inline`), set per-request in `middleware.ts`,
+  plus HSTS (preload), `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`,
+  `X-Content-Type-Options: nosniff`, and a locked-down `Permissions-Policy`.
+- `connect-src 'self' https:` is the one deliberate allowance — it exists so the
+  opt-in JWKS-URL fetch can reach an issuer you specify. The app makes no
+  automatic outbound calls.
+- No runtime dependency ever processes your token, secret, or keys.
+- **Tested:** a Vitest suite asserts the crypto core, including that every
+  attack generator emits a cryptographically valid forgery; GitHub Actions runs
+  lint + tests + build on every push and PR.
+
 ## Project layout
 
 ```
 src/
-  app/            # routes: / decode audit attack about (App Router)
+  app/            # routes: / decode audit attack guides about (App Router)
   components/     # UI: shared + decode/ and attack/ panels
-  lib/            # base64url, jwt, crypto, claims, audit, attacks, artifacts
+  lib/            # base64url, jwt, crypto, claims, audit, attacks, artifacts, seo
   workers/        # HS256 brute-force Web Worker
+  middleware.ts   # per-request nonce CSP
 ```
 
 ## Deploy to Vercel
