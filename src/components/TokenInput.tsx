@@ -79,6 +79,18 @@ export function TokenInput({
               {s.label}
             </button>
           ))}
+          <span className="mx-1 text-line">|</span>
+          <button
+            type="button"
+            onClick={() =>
+              // Unsigned HS256 starter: {"alg":"HS256","typ":"JWT"}.{}.
+              setToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.")
+            }
+            title="Start from a blank HS256 template and build a token from scratch"
+            className="btn px-2 py-1 text-xs"
+          >
+            + Start blank
+          </button>
         </div>
       )}
     </div>

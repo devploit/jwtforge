@@ -115,6 +115,12 @@ export function SegmentPanels({
         onChange={onPayloadChange}
         error={errors.payload}
         minH="min-h-[170px]"
+        toolbar={
+          <ClaimQuickTools
+            payloadText={payloadText}
+            onChange={onPayloadChange}
+          />
+        }
       />
 
       <section className="panel border-l-2 border-seg-sig/40 p-4">
@@ -145,6 +151,7 @@ function EditablePanel({
   onChange,
   error,
   minH,
+  toolbar,
 }: {
   title: string;
   subtitle: string;
@@ -154,6 +161,7 @@ function EditablePanel({
   onChange: (v: string) => void;
   error?: boolean;
   minH: string;
+  toolbar?: React.ReactNode;
 }) {
   return (
     <section className={`panel border-l-2 ${ring} p-4`}>
@@ -182,6 +190,56 @@ function EditablePanel({
           error ? "ring-1 ring-sev-high/40" : ""
         } rounded`}
       />
+      {toolbar}
     </section>
+  );
+}
+
+const HOUR = 3600;
+const DAY = 86400;
+
+/** Quick-set buttons for time claims — edits the payload JSON in place. */
+function ClaimQuickTools({
+  payloadText,
+  onChange,
+}: {
+  payloadText: string;
+  onChange: (v: string) => void;
+}) {
+  function patch(mut: (p: Record<string, unknown>, nowSec: number) => void) {
+    let payload: Record<string, unknown>;
+    try {
+      payload = JSON.parse(payloadText);
+    } catch {
+      return; // invalid JSON — ignore until it parses
+    }
+    const nowSec = Math.floor(Date.now() / 1000);
+    mut(payload, nowSec);
+    onChange(JSON.stringify(payload, null, 2));
+  }
+
+  const tools: { label: string; title: string; run: () => void }[] = [
+    { label: "iat = now", title: "Set issued-at to now", run: () => patch((p, n) => (p.iat = n)) },
+    { label: "exp +1h", title: "Set expiry to 1 hour from now", run: () => patch((p, n) => (p.exp = n + HOUR)) },
+    { label: "exp +1d", title: "Set expiry to 1 day from now", run: () => patch((p, n) => (p.exp = n + DAY)) },
+    { label: "exp +30d", title: "Set expiry to 30 days from now", run: () => patch((p, n) => (p.exp = n + 30 * DAY)) },
+    { label: "nbf = now", title: "Set not-before to now", run: () => patch((p, n) => (p.nbf = n)) },
+    { label: "− exp", title: "Remove the exp claim", run: () => patch((p) => delete p.exp) },
+  ];
+
+  return (
+    <div className="mt-2 flex flex-wrap gap-1.5 border-t border-line/60 pt-2">
+      {tools.map((t) => (
+        <button
+          key={t.label}
+          type="button"
+          title={t.title}
+          onClick={t.run}
+          className="rounded border border-line bg-bg-inset/60 px-2 py-1 font-mono text-[11px] text-slate-300 transition-colors hover:border-accent/50 hover:text-white"
+        >
+          {t.label}
+        </button>
+      ))}
+    </div>
   );
 }
