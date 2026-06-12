@@ -46,9 +46,9 @@ export function JwtEditor({
         aria-hidden="true"
         className={`${boxClasses} pointer-events-none absolute inset-0 overflow-hidden border-transparent`}
       >
+        {/* No leading newline here: a newline as the first child of <pre> is
+            stripped by the HTML parser and would cause a hydration mismatch. */}
         {value ? <Highlight value={value} /> : null}
-        {/* trailing newline keeps the last line height stable */}
-        {"\n"}
       </pre>
       <textarea
         id={id}
