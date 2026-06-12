@@ -6,6 +6,7 @@ import { base64UrlToBytes, stringToBase64Url } from "@/lib/base64url";
 import { hmacSign } from "@/lib/crypto";
 import { useToken } from "@/lib/token-context";
 import { CopyButton } from "@/components/CopyButton";
+import { JsonEditor } from "@/components/JsonEditor";
 
 /**
  * The familiar three-panel JWT view, color-coded like jwt.io — but the header
@@ -181,14 +182,12 @@ function EditablePanel({
           <CopyButton text={value} />
         </div>
       </div>
-      <textarea
-        aria-label={`Edit ${title.toLowerCase()} JSON`}
+      <JsonEditor
+        ariaLabel={`Edit ${title.toLowerCase()} JSON`}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
-        spellCheck={false}
-        className={`w-full resize-y bg-transparent font-mono text-sm leading-relaxed outline-none ${minH} ${color} ${
-          error ? "ring-1 ring-sev-high/40" : ""
-        } rounded`}
+        onChange={onChange}
+        minHeightClass={minH}
+        error={error}
       />
       {toolbar}
     </section>
