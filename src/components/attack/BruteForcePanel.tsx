@@ -32,8 +32,9 @@ export function BruteForcePanel({ decoded }: { decoded: DecodedJwt }) {
       .split("\n")
       .map((w) => w.replace(/\r$/, ""))
       .filter((w) => w.length > 0);
-    // De-dupe while preserving order (built-in list first).
-    const words = Array.from(new Set([...COMMON_SECRETS, ...extra]));
+    // De-dupe while preserving order. Test the empty secret first — tokens
+    // signed with a blank/missing key are a real misconfiguration.
+    const words = Array.from(new Set(["", ...COMMON_SECRETS, ...extra]));
 
     const worker = new Worker(
       new URL("../../workers/bruteforce.worker.ts", import.meta.url),
@@ -168,7 +169,11 @@ function StatusView({ status }: { status: Status }) {
           Secret found after {status.tried} tries:
         </p>
         <p className="mt-1 break-all font-mono text-base text-green-300">
-          {status.secret}
+          {status.secret === "" ? (
+            <span className="italic text-green-400">(empty secret)</span>
+          ) : (
+            status.secret
+          )}
         </p>
         <p className="mt-1 text-xs text-slate-400">
           You can now forge tokens: use this secret in the Decode tab&apos;s

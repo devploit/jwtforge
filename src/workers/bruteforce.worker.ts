@@ -48,9 +48,16 @@ async function hmac(
   secret: string,
   signingInput: string,
 ): Promise<string> {
+  let keyData: Uint8Array = enc.encode(secret);
+  // WebCrypto rejects an empty HMAC key; an empty key is equivalent to a
+  // block-sized zero key (HMAC zero-pads short keys), so we can still test for
+  // an empty/blank secret — a real misconfiguration.
+  if (keyData.length === 0) {
+    keyData = new Uint8Array(hash === "SHA-256" ? 64 : 128);
+  }
   const key = await crypto.subtle.importKey(
     "raw",
-    enc.encode(secret),
+    keyData,
     { name: "HMAC", hash },
     false,
     ["sign"],
