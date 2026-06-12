@@ -35,7 +35,14 @@ export async function hmacSign(
   secret: Uint8Array | string,
   signingInput: string,
 ): Promise<string> {
-  const keyData = typeof secret === "string" ? enc.encode(secret) : secret;
+  let keyData = typeof secret === "string" ? enc.encode(secret) : secret;
+  // WebCrypto refuses a zero-length HMAC key, but HMAC is well-defined for an
+  // empty key: it is zero-padded to the hash block size. Substituting a
+  // block-sized zero key yields the identical MAC — and matches what a server
+  // computes when its key file is empty (the /dev/null kid attack).
+  if (keyData.length === 0) {
+    keyData = new Uint8Array(alg === "HS256" ? 64 : 128);
+  }
   const key = await crypto.subtle.importKey(
     "raw",
     toArrayBuffer(keyData),

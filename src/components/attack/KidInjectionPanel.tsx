@@ -21,6 +21,7 @@ export function KidInjectionPanel({
   const [payloads, setPayloads] = useState<KidPayloads>(DEFAULT_KID_PAYLOADS);
   const [tokens, setTokens] = useState<GeneratedToken[]>([]);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function set<K extends keyof KidPayloads>(key: K, value: string) {
     setPayloads((p) => ({ ...p, [key]: value }));
@@ -28,8 +29,12 @@ export function KidInjectionPanel({
 
   async function run() {
     setBusy(true);
+    setError(null);
     try {
       setTokens(await generateKidInjection(decoded, payloads));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Generation failed.");
+      setTokens([]);
     } finally {
       setBusy(false);
     }
@@ -65,6 +70,7 @@ export function KidInjectionPanel({
       >
         {busy ? "Generating…" : "Generate kid-injection tokens"}
       </button>
+      {error && <p className="text-sm text-sev-high">{error}</p>}
       <GeneratedTokens tokens={tokens} config={config} />
     </div>
   );

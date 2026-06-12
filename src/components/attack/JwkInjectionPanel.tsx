@@ -19,16 +19,18 @@ export function JwkInjectionPanel({
   const [privateKey, setPrivateKey] = useState<string | null>(null);
   const [publicJwk, setPublicJwk] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function run() {
     setBusy(true);
+    setError(null);
     try {
       const result = await generateJwkInjection(decoded, jkuUrl.trim());
       setTokens(result.tokens);
       setPrivateKey(result.privateKeyPem);
-      setPublicJwk(
-        JSON.stringify({ keys: [result.publicJwk] }, null, 2),
-      );
+      setPublicJwk(JSON.stringify({ keys: [result.publicJwk] }, null, 2));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Generation failed.");
     } finally {
       setBusy(false);
     }
@@ -56,6 +58,7 @@ export function JwkInjectionPanel({
       >
         {busy ? "Generating keypair…" : "Generate self-signed tokens + key"}
       </button>
+      {error && <p className="text-sm text-sev-high">{error}</p>}
 
       <GeneratedTokens tokens={tokens} config={config} />
 
