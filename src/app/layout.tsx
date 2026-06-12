@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     template: "%s · JWTForge",
   },
   description:
-    "Client-side JWT security toolkit for pentesters: decode, audit for vulnerabilities, and generate attack tokens (alg:none, RS→HS confusion, kid injection, HS256 brute-force) with ready-to-run curl, Burp, nuclei and jwt_tool artifacts. Nothing leaves your browser.",
+    "Free, fully client-side JWT security toolkit for pentesters: decode and verify tokens, scan for vulnerabilities, and forge attack tokens. Nothing ever leaves your browser.",
   keywords: [
     "jwt security scanner",
     "jwt vulnerability checker",

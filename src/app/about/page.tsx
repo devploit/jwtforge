@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "How It Works & Privacy",
   description:
-    "JWTForge runs entirely in your browser using the WebCrypto API. No token, secret, or key is ever sent to a server. Learn the privacy model, the threat model, and the honest scope of the Audit feature.",
+    "JWTForge runs entirely in your browser via WebCrypto — no token, secret or key ever leaves the page. The privacy model, threat model and honest scope of Audit.",
   alternates: { canonical: "/about" },
   openGraph: {
     title: "How JWTForge Works & Privacy",

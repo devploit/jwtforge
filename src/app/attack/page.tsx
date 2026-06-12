@@ -4,7 +4,7 @@ import { AttackClient } from "./AttackClient";
 export const metadata: Metadata = {
   title: "JWT Attack Tool Online — Forge Tokens & Artifacts",
   description:
-    "JWT attack tool online: generate alg:none, RS256→HS256 algorithm-confusion, kid injection, jwk/jku self-signed and tampered tokens, plus an in-browser HS256 brute-forcer. Export ready-to-run curl, .http, Burp Intruder, nuclei and jwt_tool artifacts. No requests sent from the app.",
+    "JWT attack tool online: forge alg:none, RS256→HS256 confusion, kid/jwk injection, tampered and brute-forced tokens, then export curl, Burp, nuclei and jwt_tool artifacts.",
   alternates: { canonical: "/attack" },
   openGraph: {
     title: "JWT Attack Tool Online — JWTForge",
@@ -19,7 +19,9 @@ export default function AttackPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-1">
-        <h1 className="text-xl font-bold text-slate-50">Attack</h1>
+        <h1 className="text-2xl font-bold text-slate-50">
+          JWT attack tool
+        </h1>
         <p className="text-sm text-slate-400">
           Generate malicious token variants and ready-to-run artifacts. JWTForge
           never fires requests — you run the output from your own authorized
