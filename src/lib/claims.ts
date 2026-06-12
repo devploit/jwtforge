@@ -1,5 +1,16 @@
 import type { JwtPayload } from "./jwt";
 
+/** Registered claim names (RFC 7519 §4.1) with human descriptions. */
+export const REGISTERED_CLAIMS: Record<string, { name: string; desc: string }> = {
+  iss: { name: "Issuer", desc: "Who issued the token." },
+  sub: { name: "Subject", desc: "The principal the token is about (e.g. user id)." },
+  aud: { name: "Audience", desc: "Recipients the token is intended for." },
+  exp: { name: "Expiration", desc: "Time after which the token must be rejected." },
+  nbf: { name: "Not before", desc: "Time before which the token must be rejected." },
+  iat: { name: "Issued at", desc: "Time at which the token was issued." },
+  jti: { name: "JWT ID", desc: "Unique identifier — guards against replay." },
+};
+
 export interface TimeClaim {
   name: "exp" | "nbf" | "iat";
   raw: number;

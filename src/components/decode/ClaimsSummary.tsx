@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getTimeClaims, getValidity } from "@/lib/claims";
+import { getTimeClaims, getValidity, REGISTERED_CLAIMS } from "@/lib/claims";
 import type { JwtPayload } from "@/lib/jwt";
+
+const NON_TIME_REGISTERED = ["iss", "sub", "aud", "jti"] as const;
 
 export function ClaimsSummary({ payload }: { payload: JwtPayload }) {
   // Compute against a live clock, mounted client-side to avoid SSR mismatch.
@@ -17,28 +19,47 @@ export function ClaimsSummary({ payload }: { payload: JwtPayload }) {
 
   const timeClaims = getTimeClaims(payload, now);
   const validity = getValidity(payload, now);
+  const otherClaims = NON_TIME_REGISTERED.filter((k) => payload[k] != null).map(
+    (k) => ({
+      key: k,
+      value: Array.isArray(payload[k])
+        ? (payload[k] as unknown[]).join(", ")
+        : String(payload[k]),
+    }),
+  );
+
+  const hasRegistered = timeClaims.length > 0 || otherClaims.length > 0;
 
   return (
     <div className="space-y-3">
       <ValidityBadge validity={validity} />
-      {timeClaims.length > 0 && (
+      {hasRegistered && (
         <div className="panel divide-y divide-line">
+          <p className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+            Registered claims
+          </p>
           {timeClaims.map((c) => (
-            <div
+            <ClaimRow
               key={c.name}
-              className="flex flex-wrap items-baseline justify-between gap-2 px-3 py-2 text-sm"
-            >
-              <span className="font-mono font-semibold text-slate-200">
-                {c.name}
-                <span className="ml-2 text-xs font-normal text-slate-500">
-                  {LABELS[c.name]}
-                </span>
-              </span>
-              <span className="text-right text-slate-300">
-                {c.absolute}
-                <span className="ml-2 text-slate-500">({c.relative})</span>
-              </span>
-            </div>
+              name={c.name}
+              label={REGISTERED_CLAIMS[c.name]?.name}
+              desc={REGISTERED_CLAIMS[c.name]?.desc}
+              value={
+                <>
+                  {c.absolute}
+                  <span className="ml-2 text-slate-500">({c.relative})</span>
+                </>
+              }
+            />
+          ))}
+          {otherClaims.map((c) => (
+            <ClaimRow
+              key={c.key}
+              name={c.key}
+              label={REGISTERED_CLAIMS[c.key]?.name}
+              desc={REGISTERED_CLAIMS[c.key]?.desc}
+              value={c.value}
+            />
           ))}
         </div>
       )}
@@ -46,11 +67,31 @@ export function ClaimsSummary({ payload }: { payload: JwtPayload }) {
   );
 }
 
-const LABELS: Record<string, string> = {
-  iat: "issued at",
-  nbf: "not before",
-  exp: "expires",
-};
+function ClaimRow({
+  name,
+  label,
+  desc,
+  value,
+}: {
+  name: string;
+  label?: string;
+  desc?: string;
+  value: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-wrap items-baseline justify-between gap-2 px-3 py-2 text-sm">
+      <span className="font-mono font-semibold text-slate-200" title={desc}>
+        {name}
+        {label && (
+          <span className="ml-2 cursor-help text-xs font-normal text-slate-500 underline decoration-dotted underline-offset-2">
+            {label}
+          </span>
+        )}
+      </span>
+      <span className="break-all text-right text-slate-300">{value}</span>
+    </div>
+  );
+}
 
 function ValidityBadge({
   validity,
