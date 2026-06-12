@@ -44,7 +44,7 @@ export function JwtEditor({
       <pre
         ref={preRef}
         aria-hidden="true"
-        className={`${boxClasses} pointer-events-none absolute inset-0 overflow-hidden border-transparent`}
+        className={`${boxClasses} pointer-events-none absolute inset-0 overflow-hidden border-transparent bg-bg-inset/80`}
       >
         {/* No leading newline here: a newline as the first child of <pre> is
             stripped by the HTML parser and would cause a hydration mismatch. */}
@@ -63,7 +63,7 @@ export function JwtEditor({
         autoCorrect="off"
         autoComplete="off"
         placeholder={placeholder}
-        className={`${boxClasses} relative resize-y border-line bg-bg-inset/80 text-transparent caret-accent transition-colors placeholder:text-slate-600 focus:border-accent/60 focus:bg-bg-inset`}
+        className={`${boxClasses} relative resize-y border-line bg-transparent text-transparent caret-accent transition-colors placeholder:text-slate-600 focus:border-accent/60`}
       />
     </div>
   );
