@@ -55,8 +55,8 @@ export const metadata: Metadata = {
     "jwt brute force",
   ],
   applicationName: "JWTForge",
-  authors: [{ name: "JWTForge" }],
-  creator: "JWTForge",
+  authors: [{ name: "devploit", url: "https://x.com/devploit" }],
+  creator: "devploit",
   category: "technology",
   alternates: { canonical: "/" },
   openGraph: {
@@ -143,6 +143,18 @@ export default function RootLayout({
             <p className="mt-1">
               For authorized security testing only. Audit signals are
               hypotheses to verify, not confirmed vulnerabilities.
+            </p>
+            <p className="mt-3 font-mono text-[11px] text-slate-600">
+              <span className="text-accent/70">$</span> crafted by{" "}
+              <a
+                href="https://x.com/devploit"
+                target="_blank"
+                rel="noopener noreferrer me"
+                className="text-slate-400 transition-colors hover:text-accent"
+              >
+                @devploit
+              </a>{" "}
+              <span className="text-slate-700">— built in the browser, for the browser</span>
             </p>
           </footer>
           <AnalyticsClient />
