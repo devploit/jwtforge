@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useToken } from "@/lib/token-context";
 import { SAMPLES } from "@/lib/samples";
+import { JwtEditor } from "./JwtEditor";
 
 export function TokenInput({
   rows = 5,
@@ -53,17 +54,12 @@ export function TokenInput({
           )}
         </div>
       </div>
-      <textarea
+      <JwtEditor
         id="token-input"
         value={token}
-        onChange={(e) => setToken(e.target.value)}
+        onChange={setToken}
         rows={rows}
-        spellCheck={false}
-        autoCapitalize="off"
-        autoCorrect="off"
-        placeholder="Paste a JWT here — eyJhbGciOi..."
-        className="field resize-y break-all"
-        aria-describedby="token-help"
+        ariaDescribedBy="token-help"
       />
       <p id="token-help" className="mt-1.5 text-xs text-slate-500">
         Pasted tokens stay in your browser (saved to localStorage so it
