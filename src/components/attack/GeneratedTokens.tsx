@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { CopyButton } from "@/components/CopyButton";
 import { CodeBlock } from "@/components/CodeBlock";
 import {
@@ -32,6 +32,9 @@ export function GeneratedTokens({
   config: ArtifactConfig;
 }) {
   const [tab, setTab] = useState<ArtifactKind>("curl");
+  const uid = useId();
+  const tabId = (k: string) => `${uid}-tab-${k}`;
+  const panelId = `${uid}-panel`;
   if (tokens.length === 0) return null;
 
   const bare = tokens.map((t) => t.token);
@@ -69,9 +72,23 @@ export function GeneratedTokens({
             <button
               key={a.key}
               role="tab"
+              id={tabId(a.key)}
               aria-selected={tab === a.key}
+              aria-controls={panelId}
+              tabIndex={tab === a.key ? 0 : -1}
               type="button"
               onClick={() => setTab(a.key)}
+              onKeyDown={(e) => {
+                if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+                e.preventDefault();
+                const i = ARTIFACT_TABS.findIndex((t) => t.key === tab);
+                const next =
+                  e.key === "ArrowRight"
+                    ? (i + 1) % ARTIFACT_TABS.length
+                    : (i - 1 + ARTIFACT_TABS.length) % ARTIFACT_TABS.length;
+                setTab(ARTIFACT_TABS[next].key);
+                document.getElementById(tabId(ARTIFACT_TABS[next].key))?.focus();
+              }}
               className={`rounded-t-md px-3 py-1.5 text-xs font-medium transition-colors ${
                 tab === a.key
                   ? "bg-bg-raised text-accent"
@@ -82,7 +99,12 @@ export function GeneratedTokens({
             </button>
           ))}
         </div>
-        <div className="pt-3">
+        <div
+          id={panelId}
+          role="tabpanel"
+          aria-labelledby={tabId(tab)}
+          className="pt-3"
+        >
           <CodeBlock
             code={current}
             title={ARTIFACT_TABS.find((a) => a.key === tab)?.label}
