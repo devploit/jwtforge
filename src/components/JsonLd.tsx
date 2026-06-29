@@ -11,6 +11,7 @@ export async function JsonLd({ data }: { data: Record<string, unknown> }) {
     <script
       type="application/ld+json"
       nonce={nonce}
+      suppressHydrationWarning
       // Structured data is trusted, app-generated content (not user input).
       dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
     />

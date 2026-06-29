@@ -49,7 +49,7 @@ export function JsonEditor({
         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => onChange(e.target.value)}
         onScroll={syncScroll}
         spellCheck={false}
-        className={`${box} relative resize-y bg-transparent text-transparent caret-accent outline-none ${minHeightClass} ${
+        className={`${box} highlight-input relative resize-y bg-transparent text-transparent caret-accent outline-none ${minHeightClass} ${
           error ? "ring-1 ring-sev-high/40" : ""
         }`}
       />

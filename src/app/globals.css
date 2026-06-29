@@ -59,6 +59,45 @@ body > * {
   color: #fff;
 }
 
+/* Highlighted-overlay editors (JwtEditor, JsonEditor): the textarea text is
+   transparent so the colored <pre> behind it shows through. The global
+   ::selection rule above repaints selected glyphs opaque white, which makes
+   the textarea's own (normally invisible) text appear and ghost on top of the
+   highlight layer. Keep selected text transparent here — only the selection
+   background should show, tinting the highlighted glyphs beneath. */
+.highlight-input::selection {
+  background: rgba(139, 92, 246, 0.35);
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* JWT selection is painted on the colored mirror layer from the textarea's
+   selection range, so the native textarea selection must stay invisible. */
+.jwt-input::selection {
+  background: transparent;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.jwt-selected {
+  background: rgba(139, 92, 246, 0.35);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* The JWT color layer must reserve the same scrollbar gutter as the native
+   textarea, otherwise long tokens wrap at a wider line length than the real
+   selectable text. Keep the layer scrollable for layout parity but invisible. */
+.jwt-highlight-layer {
+  scrollbar-color: transparent transparent;
+}
+
+.jwt-highlight-layer::-webkit-scrollbar-thumb,
+.jwt-highlight-layer::-webkit-scrollbar-track,
+.jwt-highlight-layer::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 @layer base {
   h1,
   h2,
