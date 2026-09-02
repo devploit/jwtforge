@@ -51,8 +51,8 @@ empty-key, algorithm confusion, and a jwk-injection token that verifies against
 its own embedded key). CI (GitHub Actions) runs lint + tests + build on every
 push and PR.
 
-Requires Node 18+ (developed on Node 22/26). No environment variables, no
-database, no secrets — deploys to Vercel as-is with the **Next.js** preset.
+Requires Node 18+ (developed on Node 22/26). No database, no secrets — deploys
+to Cloudflare Workers via the OpenNext adapter (see below).
 
 ## The three tabs
 
@@ -131,12 +131,14 @@ HS256/384/512 (HMAC), RS256/384/512 (RSASSA-PKCS1-v1_5), PS256/384/512
   security tool. The HS256 brute-force loop runs in a Web Worker
   (`src/workers/bruteforce.worker.ts`) so the UI never blocks.
 - Runtime dependencies are limited to the framework itself (`next`, `react`,
-  `react-dom`) plus `@vercel/analytics` (privacy-friendly, cookieless visit
-  counts — the reported URL is stripped of any `#t=` token fragment before
-  sending) and `@vercel/speed-insights` (Core Web Vitals, keyed by route name
-  only — never the URL/hash). Standard dev tooling otherwise (TypeScript,
-  Tailwind, ESLint, PostCSS/Autoprefixer, Vitest). No dependency ever processes
-  your token, secret, or keys.
+  `react-dom`) plus `@opennextjs/cloudflare` (the build adapter that runs
+  Next.js on Cloudflare Workers; it does not touch application data). Analytics
+  is the Cloudflare Web Analytics beacon (privacy-friendly, cookieless visit
+  counts and Core Web Vitals — the reported URL is reduced to origin + path in
+  the browser, so the `#t=` token fragment and query string are never sent).
+  Standard dev tooling otherwise (TypeScript, Tailwind, ESLint,
+  PostCSS/Autoprefixer, Vitest, Wrangler). No dependency ever processes your
+  token, secret, or keys.
 
 ## Security posture
 
@@ -165,8 +167,20 @@ src/
   middleware.ts   # per-request nonce CSP
 ```
 
-## Deploy to Vercel
+## Deploy to Cloudflare Workers
 
-Import the repo, choose the **Next.js** preset (not "Other"), leave build /
-output / install commands at their defaults, and set **no** environment
-variables. That's it.
+The app is built with [OpenNext](https://opennext.js.org/cloudflare) and served
+from a single Worker plus static assets (`wrangler.jsonc`, `open-next.config.ts`,
+`public/_headers`). It fits the Workers Free plan (~1.2 MiB compressed).
+
+- **Local preview on the Workers runtime:** `npm run preview`
+- **Manual deploy:** `npm run deploy` (needs `npx wrangler login` once)
+- **Git integration (recommended):** in the Cloudflare dashboard, Workers &
+  Pages → Create → Import a repository. Build command
+  `npx opennextjs-cloudflare build`, deploy command
+  `npx opennextjs-cloudflare deploy`. Every push to `main` deploys; other
+  branches get preview URLs.
+
+The only optional setting is the `NEXT_PUBLIC_CF_BEACON_TOKEN` build variable
+(Cloudflare Web Analytics site token). Without it the analytics beacon is simply
+not rendered.

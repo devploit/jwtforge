@@ -94,12 +94,13 @@ export default function AboutPage() {
 
       <Section title="Analytics">
         <p>
-          JWTForge uses Vercel Web Analytics for aggregate visit counts only. It
-          is cookieless, stores no personal data, and never reads form or input
-          values — so it cannot see your token, secret, or keys. As an extra
-          safeguard, the URL reported to analytics is stripped of the{" "}
-          <code>#t=</code> token fragment before any event is sent, so a token
-          in a shared link is never transmitted.
+          JWTForge uses Cloudflare Web Analytics for aggregate visit counts and
+          Core Web Vitals only. It is cookieless, stores no personal data, and
+          never reads form or input values — so it cannot see your token,
+          secret, or keys. The reported URL is reduced to origin and path in the
+          browser: the <code>#t=</code> token fragment and any query string are
+          dropped before any event is sent, so a token in a shared link is never
+          transmitted.
         </p>
       </Section>
 

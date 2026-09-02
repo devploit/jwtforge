@@ -3,7 +3,7 @@ import next from "eslint-config-next";
 const eslintConfig = [
   ...next,
   {
-    ignores: [".next/**", "node_modules/**"],
+    ignores: [".next/**", ".open-next/**", ".wrangler/**", "node_modules/**"],
   },
   {
     // The React Compiler (new in Next 16) flags two idiomatic patterns we use

@@ -30,9 +30,8 @@ import { PrivacyBadge } from "@/components/PrivacyBadge";
 import { Logo } from "@/components/Logo";
 import { GithubLink } from "@/components/GithubLink";
 import { JsonLd } from "@/components/JsonLd";
-import { AnalyticsClient } from "@/components/AnalyticsClient";
+import { CloudflareAnalytics } from "@/components/CloudflareAnalytics";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { appJsonLd, websiteJsonLd } from "@/lib/seo";
 import Link from "next/link";
 
@@ -171,8 +170,7 @@ export default function RootLayout({
               </a>
             </p>
           </footer>
-          <AnalyticsClient />
-          <SpeedInsights />
+          <CloudflareAnalytics />
           <ServiceWorkerRegister />
         </TokenProvider>
       </body>
